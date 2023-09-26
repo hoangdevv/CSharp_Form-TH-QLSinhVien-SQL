@@ -11,12 +11,12 @@ using System.Windows.Forms;
 using QLSinhVien_SQL.Model; // Khai báo CSDL
 namespace QLSinhVien_SQL
 {
-    public partial class Form1 : Form
+    public partial class FormMain : Form
     {
         
         DataBaseStudent dbStudent = new DataBaseStudent(); //Khai báo đối tượng CSDL
         int index = -1;
-        public Form1()
+        public FormMain()
         {
             InitializeComponent();
         }
@@ -34,10 +34,11 @@ namespace QLSinhVien_SQL
         private void loadDataGridView()
         {
             List<Student> listStudents = dbStudent.Students.ToList();
-            dataGridView1.Rows.Clear();
+            dataGridViewMain.Rows.Clear();
             foreach (var student in listStudents) {
-                dataGridView1.Rows.Add(student.studentID, student.fullName, student.Faculty.facultyName, student.averageScore);
+                dataGridViewMain.Rows.Add(student.studentID, student.fullName, student.Faculty.facultyName, student.averageScore);
             }
+            dataGridViewMain.Refresh();
         }
 
         bool KiemTraInput()
@@ -62,8 +63,6 @@ namespace QLSinhVien_SQL
             return true;
         }
 
-
-
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             index = e.RowIndex;
@@ -73,10 +72,10 @@ namespace QLSinhVien_SQL
                 return;
             }
 
-            txtID.Text = dataGridView1.Rows[index].Cells[0].Value.ToString();
-            txtName.Text = dataGridView1.Rows[index].Cells[1].Value.ToString();
-            cbFaculty.Text = dataGridView1.Rows[index].Cells[2].Value.ToString();
-            txtAverageScore.Text = dataGridView1.Rows[index].Cells[3].Value.ToString();
+            txtID.Text = dataGridViewMain.Rows[index].Cells[0].Value.ToString();
+            txtName.Text = dataGridViewMain.Rows[index].Cells[1].Value.ToString();
+            cbFaculty.Text = dataGridViewMain.Rows[index].Cells[2].Value.ToString();
+            txtAverageScore.Text = dataGridViewMain.Rows[index].Cells[3].Value.ToString();
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -95,11 +94,15 @@ namespace QLSinhVien_SQL
             newStudent.fullName = name;
             newStudent.facultyID = facultyID;
             newStudent.averageScore = averageScore;
-
+            if(id == newStudent.studentID)
+            {
+                MessageBox.Show("Đã có mã số tồn tại!");
+                return;
+            }
             dbStudent.Students.Add(newStudent);
             dbStudent.SaveChanges();
             loadDataGridView();
-            MessageBox.Show("Thêm mới dữ liệu thành công!", "Thông báo", MessageBoxButtons.OK);   
+            MessageBox.Show("Thêm mới dữ liệu thành công!", "Thông báo", MessageBoxButtons.OK);
             
         }
 
@@ -186,5 +189,23 @@ namespace QLSinhVien_SQL
             Application.Exit();
         }
 
+      
+        private void sinhViênToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormFaculty formFaculty = new FormFaculty();
+            formFaculty.ShowDialog();
+            formFaculty.FormClosed += FormFaculty_FormClosed;
+        }
+
+        private void FormFaculty_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            loadDataGridView();
+        }
+
+        private void khoaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormSearch formSearch = new FormSearch();
+            formSearch.ShowDialog();
+        }
     }
 }

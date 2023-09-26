@@ -18,8 +18,11 @@ namespace QLSinhVien_SQL.Model
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
 
+        [Required]
         [StringLength(50)]
         public string facultyName { get; set; }
+
+        public int? totalProfessor { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Student> Students { get; set; }

@@ -8,7 +8,7 @@ namespace QLSinhVien_SQL.Model
     public partial class DataBaseStudent : DbContext
     {
         public DataBaseStudent()
-            : base("name=StudentModel")
+            : base("name=Model11")
         {
         }
 
